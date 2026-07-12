@@ -1,5 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
+import { checkAudioDuration } from "../utils/validateDuration";
 
 const router = Router();
 
@@ -10,15 +11,19 @@ const upload = multer({
     limits: { fileSize: 20 * 1024 * 1024 }, 
 });
 
-router.post("/assess", upload.single("audio"), (req, res) => {
+router.post("/assess", upload.single("audio"), async (req, res) => {
     if(!req.file) {
         return res.status(400).json({ error: "No audio file was uploaded."});
     }
 
+    const durationCheck = await checkAudioDuration(req.file.buffer, req.file.mimetype);
+    if(!durationCheck.ok) {
+        return res.status(400).json({ error: durationCheck.message });
+    }
+
     return res.json({ 
-        receivedFileName: req.file.originalname,
-        mimeType: req.file.mimetype,
-        sizeBytes: req.file.size,
+        durationSeconds: durationCheck.durationSeconds,
+        message: "Duration check passed.",
     });
 });
 
