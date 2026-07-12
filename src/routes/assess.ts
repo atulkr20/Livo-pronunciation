@@ -1,6 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
-import { checkAudioDuration } from "../utils/validateDuration";
+import { checkAudioDuration } from "../utils/validateDuration.js";
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 import express from "express";
-import assessRouter from "./routes/assess";
+import assessRouter from "./routes/assess.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
